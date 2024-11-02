@@ -10,7 +10,7 @@ public final class StorageUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final Tika tika = new Tika();
+    private static final Tika TIKA = new Tika();
 
     public static Stored constructDownloadedFile(byte[] bytes, String filename, String path) {
         return constructDownloadedFile(bytes, filename, path, guessContentType(filename));
@@ -43,6 +43,6 @@ public final class StorageUtils {
     }
 
     public static String guessContentType(String filename) {
-        return tika.detect(filename);
+        return TIKA.detect(filename);
     }
 }

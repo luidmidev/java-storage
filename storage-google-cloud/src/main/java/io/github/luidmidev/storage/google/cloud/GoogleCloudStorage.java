@@ -1,4 +1,4 @@
-package io.github.luidmidev.storage.firestore;
+package io.github.luidmidev.storage.google.cloud;
 
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
@@ -6,24 +6,26 @@ import io.github.luidmidev.storage.core.Stored;
 import io.github.luidmidev.storage.core.Storage;
 import io.github.luidmidev.storage.core.exceptions.FileNotFoundStorageException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 import static io.github.luidmidev.storage.core.utils.StorageUtils.*;
 
+@Slf4j
 @RequiredArgsConstructor
 public class GoogleCloudStorage extends Storage {
 
     private final Bucket bucket;
 
     @Override
-    protected String internalStore(byte[] content, String filename, String path) {
+    protected void internalStore(byte[] content, String filename, String path) {
 
         var fullPath = path + filename;
         var contentType = guessContentType(filename);
         var blob = bucket.create(fullPath, content, contentType);
 
-        return blob.getName();
+        log.debug("Stored blob: {}", blob.getName());
     }
 
     @Override
@@ -67,7 +69,8 @@ public class GoogleCloudStorage extends Storage {
 
     @Override
     protected boolean internalExists(String filename, String path) {
-        var blob = getBlob(filename, path);
+        var fullPath = path + filename;
+        var blob = getBlob(fullPath);
         return blob != null && blob.exists();
     }
 
@@ -79,10 +82,6 @@ public class GoogleCloudStorage extends Storage {
             throw new FileNotFoundStorageException(filename, path);
         }
         blob.delete();
-    }
-
-    private Blob getBlob(String filename, String path) {
-        return getBlob(filename + path);
     }
 
     private Blob getBlob(String blobName) {

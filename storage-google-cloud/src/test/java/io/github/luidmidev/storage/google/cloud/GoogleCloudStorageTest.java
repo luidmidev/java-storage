@@ -1,4 +1,4 @@
-package io.github.luidmidev.storage.firestore;
+package io.github.luidmidev.storage.google.cloud;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -48,10 +48,9 @@ class GoogleCloudStorageTest {
             if (resource == null) {
                 throw new IllegalArgumentException("File not found");
             }
-            var id = googleCloudStorage.store(resource, "test.txt");
-            log.info("Stored file with id {}", id);
+            googleCloudStorage.store(resource, "test.txt");
 
-            assertNotNull(id);
+            assertTrue(true);
         } catch (IOException e) {
             log.error("Error storing file {}", e.getMessage());
             fail(e);
@@ -67,10 +66,10 @@ class GoogleCloudStorageTest {
             if (resource == null) {
                 throw new IllegalArgumentException("File not found");
             }
-            var id = googleCloudStorage.store(resource, fileName, "test/");
-            log.info("Stored file with path with id {}", id);
 
-            assertNotNull(id);
+            googleCloudStorage.store(resource, fileName, "test/");
+
+            assertTrue(true);
         } catch (IOException e) {
             fail(e);
         }
@@ -85,10 +84,10 @@ class GoogleCloudStorageTest {
             if (resource == null) {
                 throw new IllegalArgumentException("File not found");
             }
-            var fullPath = googleCloudStorage.store(resource, fileName);
-            log.info("Stored file to download with id {}", fullPath);
 
-            var downloaded = googleCloudStorage.download(fullPath);
+            googleCloudStorage.store(resource, fileName);
+
+            var downloaded = googleCloudStorage.download(fileName);
             assertTrue(downloaded.isPresent());
 
             var fileInfo = downloaded.get().getInfo();
@@ -112,10 +111,10 @@ class GoogleCloudStorageTest {
             if (resource == null) {
                 throw new IllegalArgumentException("File not found");
             }
-            var id = googleCloudStorage.store(resource, "to-info" + fileName);
-            log.info("Stored file to get info with id {}", id);
 
-            var info = googleCloudStorage.info(id);
+            googleCloudStorage.store(resource, "to-info" + fileName);
+
+            var info = googleCloudStorage.info("to-info" + fileName);
             assertTrue(info.isPresent());
 
             log.info("File info {}", info.get());
@@ -134,10 +133,10 @@ class GoogleCloudStorageTest {
             if (resource == null) {
                 throw new IllegalArgumentException("File not found");
             }
-            var id = googleCloudStorage.store(resource, "to-exists" + fileName);
-            log.info("Stored file to check exists with id {}", id);
 
-            assertTrue(googleCloudStorage.exists(id));
+            googleCloudStorage.store(resource, "to-exists" + fileName);
+
+            assertTrue(googleCloudStorage.exists("to-exists" + fileName));
         } catch (IOException e) {
             fail(e);
         }
@@ -151,12 +150,11 @@ class GoogleCloudStorageTest {
             if (resource == null) {
                 throw new IllegalArgumentException("File not found");
             }
-            var id = googleCloudStorage.store(resource, "to-remove" + fileName);
-            log.info("Stored file to remove with id {}", id);
+            googleCloudStorage.store(resource, "to-remove" + fileName);
 
-            googleCloudStorage.remove(id);
+            googleCloudStorage.remove("to-remove" + fileName);
 
-            assertFalse(googleCloudStorage.exists(id));
+            assertFalse(googleCloudStorage.exists("to-remove" + fileName));
         } catch (IOException e) {
             fail(e);
         }

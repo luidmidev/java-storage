@@ -50,7 +50,7 @@ public class DiskStorage extends Storage {
     }
 
     @Override
-    protected String internalStore(byte[] content, String filename, String path) throws IOException {
+    protected void internalStore(byte[] content, String filename, String path) throws IOException {
         log.debug("Storing file {} in path {}", filename, path);
         var relativePath = path + filename;
 
@@ -65,8 +65,6 @@ public class DiskStorage extends Storage {
         try (var fos = new FileOutputStream(file)) {
             fos.write(content);
         }
-
-        return relativePath;
     }
 
     @Override

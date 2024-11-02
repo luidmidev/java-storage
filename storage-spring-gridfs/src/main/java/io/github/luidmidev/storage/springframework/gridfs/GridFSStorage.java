@@ -34,7 +34,7 @@ public final class GridFSStorage extends Storage {
 
 
     @Override
-    protected String internalStore(byte[] content, String filename, String path) {
+    protected void internalStore(byte[] content, String filename, String path) {
 
         var contentType = guessContentType(filename);
 
@@ -43,7 +43,6 @@ public final class GridFSStorage extends Storage {
         metadata.put(PATH_KEY, path);
         metadata.put("dateUpload", LocalDateTime.now());
         template.store(new ByteArrayInputStream(content), filename, contentType, metadata);
-        return filename;
     }
 
     @Override

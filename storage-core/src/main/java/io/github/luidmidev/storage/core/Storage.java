@@ -16,15 +16,64 @@ public abstract class Storage {
 
 
     /**
+     * @param content  Contenido del archivo
+     * @param filename Nombre del archivo
+     * @param path     Ruta donde se almacenará el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al almacenar el archivo
+     */
+    protected abstract void internalStore(byte[] content, String filename, String path) throws IOException;
+
+    /**
+     * Descarga un archivo almacenado a partir de su nombre y ruta
+     *
+     * @param filename Nombre del archivo
+     * @param path     Ruta donde se encuentra el archivo
+     * @return Objeto que representa el archivo almacenado
+     * @throws IOException Si ocurre un error de lectura o escritura al descargar el archivo
+     */
+    protected abstract Optional<Stored> internalDownload(String filename, String path) throws IOException;
+
+    /**
+     * Obtiene la información de un archivo almacenado a partir de su nombre y ruta
+     *
+     * @param filename Nombre del archivo
+     * @param path     Ruta donde se encuentra el archivo
+     * @return Objeto que representa la información del archivo almacenado
+     * @throws IOException Si ocurre un error de lectura o escritura al obtener la información del archivo
+     */
+    protected abstract Optional<Stored.Info> internalInfo(String filename, String path) throws IOException;
+
+    /**
+     * Verifica si un archivo almacenado existe a partir de su nombre y ruta
+     *
+     * @param filename Nombre del archivo
+     * @param path     Ruta donde se encuentra el archivo
+     * @return Si el archivo existe o no
+     * @throws IOException Si ocurre un error de lectura o escritura al verificar la existencia del archivo
+     */
+    protected abstract boolean internalExists(String filename, String path) throws IOException;
+
+    /**
+     * Elimina un archivo almacenado a partir de su nombre y ruta
+     *
+     * @param filename Nombre del archivo
+     * @param path     Ruta donde se encuentra el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al eliminar el archivo
+     */
+    protected abstract void internalRemove(String filename, String path) throws IOException;
+
+
+    /**
      * Guarda un archivo en el almacen a partir de un input stream en la ruta raíz
      *
      * @param content  Contenido del archivo
      * @param filename Nombre del archivo
-     * @return Ruta completa del archivo almacenado
-     * @throws IOException Si ocurre un error al almacenar el archivo
+     * @throws IOException                     Si ocurre un error de lectura o escritura al almacenar el archivo
+     * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
+     * @throws InvalidPathStorageException     Si el path es inválido
      */
-    public String store(InputStream content, String filename) throws IOException {
-        return store(content, filename, "/");
+    public void store(InputStream content, String filename) throws IOException {
+        store(content, filename, "/");
     }
 
     /**
@@ -32,36 +81,12 @@ public abstract class Storage {
      *
      * @param content  Contenido del archivo
      * @param filename Nombre del archivo
-     * @return Ruta completa del archivo almacenado
-     * @throws IOException Si ocurre un error al almacenar el archivo
+     * @throws IOException                     Si ocurre un error de lectura o escritura al almacenar el archivo
+     * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
+     * @throws InvalidPathStorageException     Si el path es inválido
      */
-    public String store(byte[] content, String filename) throws IOException {
-        return store(content, filename, "/");
-    }
-
-    /**
-     * Guarda un archivo en el almacen a partir de sus bytes en un path específico
-     *
-     * @param content  Contenido del archivo
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se almacenará el archivo
-     * @return Ruta completa del archivo almacenado
-     * @throws IOException Si ocurre un error al almacenar el archivo
-     */
-    public String store(byte[] content, String filename, String path) throws IOException {
-
-        log.info("Storing file {} in path {}", filename, path);
-
-        throwIfInvalidFilename(filename);
-        throwIfInvalidPath(path);
-
-        var normalizedPath = normalizePath(path);
-
-        if (internalExists(filename, normalizedPath)) {
-            throw new AlreadyFileExistsStorageException(filename, normalizedPath);
-        }
-
-        return internalStore(content, filename, normalizedPath);
+    public void store(byte[] content, String filename) throws IOException {
+        store(content, filename, "/");
     }
 
     /**
@@ -70,12 +95,40 @@ public abstract class Storage {
      * @param content  Contenido del archivo
      * @param filename Nombre del archivo
      * @param path     Ruta donde se almacenará el archivo
-     * @return Ruta completa del archivo almacenado
-     * @throws IOException Si ocurre un error al almacenar el archivo
+     * @throws IOException                     Si ocurre un error de lectura o escritura al almacenar el archivo
+     * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
+     * @throws InvalidPathStorageException     Si el path es inválido
      */
-    public String store(InputStream content, String filename, String path) throws IOException {
+    public void store(InputStream content, String filename, String path) throws IOException {
         var bytes = content.readAllBytes();
-        return store(bytes, filename, path);
+        store(bytes, filename, path);
+    }
+
+    /**
+     * Guarda un archivo en el almacen a partir de sus bytes en un path específico
+     *
+     * @param content  Contenido del archivo
+     * @param filename Nombre del archivo
+     * @param path     Ruta donde se almacenará el archivo
+     * @throws IOException                     Si ocurre un error de lectura o escritura al almacenar el archivo
+     * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
+     * @throws InvalidPathStorageException     Si el path es inválido
+     */
+    public void store(byte[] content, String filename, String path) throws IOException {
+
+        log.info("Storing file {} in path {}", filename, path);
+
+        var normalizedPath = normalizePath(path);
+
+        throwIfInvalidFilename(filename);
+        throwIfInvalidPath(normalizedPath);
+
+
+        if (internalExists(filename, normalizedPath)) {
+            throw new AlreadyFileExistsStorageException(filename, normalizedPath);
+        }
+
+        internalStore(content, filename, normalizedPath);
     }
 
 
@@ -84,7 +137,7 @@ public abstract class Storage {
      *
      * @param fullPath Ruta completa del archivo
      * @return Objeto que representa el archivo almacenado
-     * @throws IOException Si ocurre un error al descargar el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al descargar el archivo
      */
     public Optional<Stored> download(String fullPath) throws IOException {
         var split = SplitPath.from(fullPath);
@@ -95,7 +148,7 @@ public abstract class Storage {
      * @param filename Nombre del archivo
      * @param path     Ruta donde se encuentra el archivo
      * @return Objeto que representa el archivo almacenado
-     * @throws IOException Si ocurre un error al descargar el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al descargar el archivo
      */
     public Optional<Stored> download(String filename, String path) throws IOException {
         var normalizedPath = normalizePath(path);
@@ -108,7 +161,7 @@ public abstract class Storage {
      *
      * @param fullPath Ruta completa del archivo
      * @return Objeto que representa la información del archivo almacenado
-     * @throws IOException Si ocurre un error al obtener la información del archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al obtener la información del archivo
      */
     public Optional<Stored.Info> info(String fullPath) throws IOException {
         var split = SplitPath.from(fullPath);
@@ -121,7 +174,7 @@ public abstract class Storage {
      * @param filename Nombre del archivo
      * @param path     Ruta donde se encuentra el archivo
      * @return Objeto que representa la información del archivo almacenado
-     * @throws IOException Si ocurre un error al obtener la información del archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al obtener la información del archivo
      */
     public Optional<Stored.Info> info(String filename, String path) throws IOException {
         var normalizedPath = normalizePath(path);
@@ -133,7 +186,7 @@ public abstract class Storage {
      *
      * @param fullPath Ruta completa del archivo
      * @return Si el archivo existe o no
-     * @throws IOException Si ocurre un error al verificar la existencia del archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al verificar la existencia del archivo
      */
     public boolean exists(String fullPath) throws IOException {
         var split = SplitPath.from(fullPath);
@@ -146,7 +199,7 @@ public abstract class Storage {
      * @param filename Nombre del archivo
      * @param path     Ruta donde se encuentra el archivo
      * @return Si el archivo existe o no
-     * @throws IOException Si ocurre un error al verificar la existencia del archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al verificar la existencia del archivo
      */
     public boolean exists(String filename, String path) throws IOException {
         var normalizedPath = normalizePath(path);
@@ -157,7 +210,7 @@ public abstract class Storage {
      * Elimina un archivo almacenado a partir de su ruta completa
      *
      * @param fullPath Ruta completa del archivo
-     * @throws IOException Si ocurre un error al eliminar el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al eliminar el archivo
      */
     public void remove(String fullPath) throws IOException {
         var split = SplitPath.from(fullPath);
@@ -169,67 +222,20 @@ public abstract class Storage {
      *
      * @param filename Nombre del archivo
      * @param path     Ruta donde se encuentra el archivo
-     * @throws IOException Si ocurre un error al eliminar el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al eliminar el archivo
      */
     public void remove(String filename, String path) throws IOException {
         var normalizedPath = normalizePath(path);
         internalRemove(filename, normalizedPath);
     }
 
-    /**
-     * @param content  Contenido del archivo
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se almacenará el archivo
-     * @return Ruta completa del archivo almacenado
-     * @throws IOException Si ocurre un error al almacenar el archivo
-     */
-    protected abstract String internalStore(byte[] content, String filename, String path) throws IOException;
-
-    /**
-     * Descarga un archivo almacenado a partir de su nombre y ruta
-     *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
-     * @return Objeto que representa el archivo almacenado
-     * @throws IOException Si ocurre un error al descargar el archivo
-     */
-    protected abstract Optional<Stored> internalDownload(String filename, String path) throws IOException;
-
-    /**
-     * Obtiene la información de un archivo almacenado a partir de su nombre y ruta
-     *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
-     * @return Objeto que representa la información del archivo almacenado
-     * @throws IOException Si ocurre un error al obtener la información del archivo
-     */
-    protected abstract Optional<Stored.Info> internalInfo(String filename, String path) throws IOException;
-
-    /**
-     * Verifica si un archivo almacenado existe a partir de su nombre y ruta
-     *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
-     * @return Si el archivo existe o no
-     * @throws IOException Si ocurre un error al verificar la existencia del archivo
-     */
-    protected abstract boolean internalExists(String filename, String path) throws IOException;
-
-    /**
-     * Elimina un archivo almacenado a partir de su nombre y ruta
-     *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
-     * @throws IOException Si ocurre un error al eliminar el archivo
-     */
-    protected abstract void internalRemove(String filename, String path) throws IOException;
 
     /**
      * Elimina los archivos almacenados a partir de un objeto que contiene las referencias a los archivos
      * a eliminar
      *
      * @param purgable Objeto que contiene las referencias a los archivos a eliminar
-     * @throws IOException Si ocurre un error al eliminar los archivos almacenados a partir del objeto purgable
+     * @throws IOException Si ocurre un error de lectura o escritura al eliminar los archivos almacenados a partir del objeto purgable
      */
     public void purge(PurgableStored purgable) throws IOException {
         for (var fullPath : purgable.filesFullPaths()) remove(fullPath);
@@ -239,7 +245,7 @@ public abstract class Storage {
      * Elimina los archivos almacenados a partir de una colección de objetos que contienen las referencias a los archivos
      *
      * @param purgables Objetos que contienen las referencias a los archivos a eliminar
-     * @throws IOException Si ocurre un error al eliminar los archivos almacenados a partir de los objetos purgables
+     * @throws IOException Si ocurre un error de lectura o escritura al eliminar los archivos almacenados a partir de los objetos purgables
      */
     public void purge(Iterable<? extends PurgableStored> purgables) throws IOException {
         for (PurgableStored purgable : purgables) {
@@ -254,7 +260,7 @@ public abstract class Storage {
      * @param target   Almacen donde se almacenará el archivo
      * @param filename Nombre del archivo
      * @param path     Ruta donde se encuentra el archivo
-     * @throws IOException Si ocurre un error al transferir el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al transferir el archivo
      */
     public void transferTo(Storage target, String filename, String path) throws IOException {
         var normalizedPath = normalizePath(path);
@@ -270,7 +276,7 @@ public abstract class Storage {
      *
      * @param target   Almacen donde se almacenará el archivo
      * @param fullPath Ruta completa del archivo
-     * @throws IOException Si ocurre un error al transferir el archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al transferir el archivo
      */
     public void transferTo(Storage target, String fullPath) throws IOException {
         var split = SplitPath.from(fullPath);
@@ -323,7 +329,8 @@ public abstract class Storage {
             throw new InvalidPathStorageException(path, "The path is required.");
         }
 
-        // Verificar caracteres inválidos
+        if (path.equals("/")) return;
+
         var invalidCharacters = new StringBuilder();
         for (char c : path.toCharArray()) {
             var charact = String.valueOf(c);

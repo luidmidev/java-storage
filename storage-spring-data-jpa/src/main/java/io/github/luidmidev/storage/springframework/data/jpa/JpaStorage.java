@@ -3,19 +3,21 @@ package io.github.luidmidev.storage.springframework.data.jpa;
 import io.github.luidmidev.storage.core.Stored;
 import io.github.luidmidev.storage.core.Storage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static io.github.luidmidev.storage.core.utils.StorageUtils.*;
 
+@Slf4j
 @RequiredArgsConstructor
 public final class JpaStorage extends Storage {
 
     private final FileStoredRepository repository;
 
     @Override
-    protected String internalStore(byte[] upload, String filename, String path) {
+    protected void internalStore(byte[] upload, String filename, String path) {
 
         var contentType = guessContentType(filename);
 
@@ -29,7 +31,7 @@ public final class JpaStorage extends Storage {
                 .build();
 
         var saved = repository.save(dbFile);
-        return saved.getId().toString();
+        log.debug("Stored file: {}", saved.getId());
     }
 
     @Override
