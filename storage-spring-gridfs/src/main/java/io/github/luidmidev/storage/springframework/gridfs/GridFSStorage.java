@@ -5,7 +5,6 @@ import io.github.luidmidev.storage.core.Stored;
 import io.github.luidmidev.storage.core.Storage;
 import io.github.luidmidev.storage.core.exceptions.StorageException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,7 +22,6 @@ import static io.github.luidmidev.storage.core.utils.StorageUtils.*;
 /**
  * Servicio para operaciones relacionadas con archivos.
  */
-@Log4j2
 @RequiredArgsConstructor
 public final class GridFSStorage extends Storage {
 
