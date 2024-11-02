@@ -13,7 +13,7 @@
         Store is a library that provides a simple and easy way to store files in different storage services.
     </description>
 
-    <url>https://github.com/luidmidev/apache-poi-improvements.git</url>
+    <url>https://github.com/luidmidev/java-storage.git</url>
 
     <licenses>
         <license>
@@ -31,9 +31,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/luidmidev/apache-poi-improvements.git</url>
-        <connection>scm:git:git://github.com/luidmidev/apache-poi-improvements.git</connection>
-        <developerConnection>scm:git:sshl://github.com/luidmidev/apache-poi-improvements.git</developerConnection>
+        <url>https://github.com/luidmidev/java-storage.git</url>
+        <connection>scm:git:git://github.com/luidmidev/java-storage.git</connection>
+        <developerConnection>scm:git:sshl://github.com/luidmidev/java-storage.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

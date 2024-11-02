@@ -337,7 +337,6 @@ public abstract class Storage {
             throw new InvalidPathStorageException(path, "The path contains invalid characters: " + invalidCharacters.toString().trim());
         }
 
-
         validateInPathSegments(path);
     }
 
