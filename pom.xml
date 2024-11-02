@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.luidmidev</groupId>
+    <artifactId>storage</artifactId>
+    <version>0.0.1</version>
+    <packaging>pom</packaging>
+    <name>Store</name>
+    <description>
+        Store is a library that provides a simple and easy way to store files in different storage services.
+    </description>
+
+    <url>https://github.com/luidmidev/apache-poi-improvements.git</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>luidmidev</id>
+            <name>Luis Miguel Vasquez Basurto</name>
+            <email>playerluis159@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/luidmidev/apache-poi-improvements.git</url>
+        <connection>scm:git:git://github.com/luidmidev/apache-poi-improvements.git</connection>
+        <developerConnection>scm:git:sshl://github.com/luidmidev/apache-poi-improvements.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <modules>
+        <module>storage-core</module>
+        <module>storage-disk</module>
+        <module>storage-google-cloud</module>
+        <module>storage-spring-data-jpa</module>
+        <module>storage-spring-gridfs</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Ketoru Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/luidmidev/ketoru-java-artifacts</url>
+        </repository>
+    </distributionManagement>
+
+</project>
