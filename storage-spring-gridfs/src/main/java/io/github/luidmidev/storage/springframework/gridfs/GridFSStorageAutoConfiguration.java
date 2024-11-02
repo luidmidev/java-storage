@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 @Configuration
 @ConditionalOnClass({GridFsTemplate.class, GridFsOperations.class})
-public class GridFSStorageAutoConfigurration {
+public class GridFSStorageAutoConfiguration {
 
     @Bean
     public GridFSStorage gridFSStorage(GridFsTemplate gridFsTemplate, GridFsOperations gridFsOperations) {

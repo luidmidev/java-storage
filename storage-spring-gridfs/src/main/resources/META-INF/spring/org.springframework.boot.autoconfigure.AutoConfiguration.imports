@@ -1,1 +1,1 @@
-io.github.luidmidev.storage.springframework.data.jpa.JpaStorageAutoConfiguration
+io.github.luidmidev.storage.springframework.gridfs.GridFSStorageAutoConfiguration
