@@ -3,16 +3,14 @@ package io.github.luidmidev.storage.springframework.data.jpa;
 import io.github.luidmidev.storage.core.Stored;
 import io.github.luidmidev.storage.core.Storage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static io.github.luidmidev.storage.core.utils.StorageUtils.*;
 
-@Service
 @RequiredArgsConstructor
-public class JpaStorage extends Storage {
+public final class JpaStorage extends Storage {
 
     private final FileStoredRepository repository;
 
