@@ -1,6 +1,6 @@
-package io.github.luidmidev.storage.core.exceptions;
+package io.github.luidmidev.storage.exceptions;
 
-import io.github.luidmidev.storage.core.PathFile;
+import io.github.luidmidev.storage.PathFile;
 import lombok.Getter;
 
 import java.util.function.Supplier;

@@ -1,4 +1,4 @@
-package io.github.luidmidev.storage.core;
+package io.github.luidmidev.storage;
 
 public interface PurgableStored {
     String[] filesFullPaths();

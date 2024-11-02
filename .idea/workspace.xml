@@ -5,26 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0203323b-92e9-42a1-b6fb-199f02b264df" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/PathFile.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/StorageAssertions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/StorageUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/ToStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/Storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/Storage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/AlreadyFileExistsStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/AlreadyFileExistsStorageException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/FileNotFoundStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/FileNotFoundStorageException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/utils/StorageUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-disk/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-disk/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/PathFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/PathFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/PurgableStored.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/PurgableStored.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/Storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/Storage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/StorageAssertions.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/StorageAssertions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/StorageUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/StorageUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/Stored.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/Stored.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/ToStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/ToStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/AlreadyFileExistsStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/exceptions/AlreadyFileExistsStorageException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/FileNotFoundStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/exceptions/FileNotFoundStorageException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/InvalidFileNameStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/exceptions/InvalidFileNameStorageException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/InvalidPathStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/exceptions/InvalidPathStorageException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/StorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/exceptions/StorageException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage-disk/src/main/java/io/github/luidmidev/storage/disk/DiskStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-disk/src/main/java/io/github/luidmidev/storage/disk/DiskStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-google-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-google-cloud/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage-google-cloud/src/main/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-google-cloud/src/main/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-google-cloud/src/test/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorageTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-google-cloud/src/test/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorageTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-spring-data-jpa/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-data-jpa/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage-spring-data-jpa/src/main/java/io/github/luidmidev/storage/springframework/data/jpa/JpaStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-data-jpa/src/main/java/io/github/luidmidev/storage/springframework/data/jpa/JpaStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-spring-gridfs/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-gridfs/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage-spring-gridfs/src/main/java/io/github/luidmidev/storage/springframework/gridfs/GridFSStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-gridfs/src/main/java/io/github/luidmidev/storage/springframework/gridfs/GridFSStorage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +124,7 @@
       <workItem from="1730557990607" duration="606000" />
       <workItem from="1730558776373" duration="1566000" />
       <workItem from="1730560402281" duration="980000" />
-      <workItem from="1730561435165" duration="15949000" />
+      <workItem from="1730561435165" duration="16131000" />
     </task>
     <servers />
   </component>

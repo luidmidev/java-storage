@@ -1,16 +1,16 @@
 package io.github.luidmidev.storage.springframework.data.jpa;
 
-import io.github.luidmidev.storage.core.PathFile;
-import io.github.luidmidev.storage.core.Stored;
-import io.github.luidmidev.storage.core.Storage;
-import io.github.luidmidev.storage.core.ToStore;
+import io.github.luidmidev.storage.PathFile;
+import io.github.luidmidev.storage.Stored;
+import io.github.luidmidev.storage.Storage;
+import io.github.luidmidev.storage.ToStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static io.github.luidmidev.storage.core.StorageUtils.*;
+import static io.github.luidmidev.storage.StorageUtils.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public final class JpaStorage extends Storage {
                 .build();
 
         var saved = repository.save(dbFile);
-        log.debug("Stored file: {}", saved.getId());
+        log.debug("Stored file with jpa: {}", saved.getId());
     }
 
     @Override

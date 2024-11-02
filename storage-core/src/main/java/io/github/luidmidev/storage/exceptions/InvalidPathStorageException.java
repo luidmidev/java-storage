@@ -1,4 +1,4 @@
-package io.github.luidmidev.storage.core.exceptions;
+package io.github.luidmidev.storage.exceptions;
 
 import lombok.Getter;
 

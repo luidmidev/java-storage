@@ -2,14 +2,17 @@ package io.github.luidmidev.storage.google.cloud;
 
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
-import io.github.luidmidev.storage.core.*;
-import io.github.luidmidev.storage.core.exceptions.FileNotFoundStorageException;
+import io.github.luidmidev.storage.PathFile;
+import io.github.luidmidev.storage.Storage;
+import io.github.luidmidev.storage.Stored;
+import io.github.luidmidev.storage.ToStore;
+import io.github.luidmidev.storage.exceptions.FileNotFoundStorageException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
-import static io.github.luidmidev.storage.core.StorageUtils.*;
+import static io.github.luidmidev.storage.StorageUtils.*;
 
 @Slf4j
 @RequiredArgsConstructor

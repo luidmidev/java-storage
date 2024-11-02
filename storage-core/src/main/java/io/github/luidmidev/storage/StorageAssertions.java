@@ -1,8 +1,8 @@
-package io.github.luidmidev.storage.core;
+package io.github.luidmidev.storage;
 
-import io.github.luidmidev.storage.core.exceptions.InvalidFileNameStorageException;
-import io.github.luidmidev.storage.core.exceptions.InvalidPathStorageException;
-import io.github.luidmidev.storage.core.exceptions.StorageException;
+import io.github.luidmidev.storage.exceptions.InvalidFileNameStorageException;
+import io.github.luidmidev.storage.exceptions.InvalidPathStorageException;
+import io.github.luidmidev.storage.exceptions.StorageException;
 
 import java.util.regex.Pattern;
 

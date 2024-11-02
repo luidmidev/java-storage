@@ -1,8 +1,8 @@
 package io.github.luidmidev.storage.disk;
 
-import io.github.luidmidev.storage.core.*;
-import io.github.luidmidev.storage.core.exceptions.AlreadyFileExistsStorageException;
-import io.github.luidmidev.storage.core.exceptions.FileNotFoundStorageException;
+import io.github.luidmidev.storage.*;
+import io.github.luidmidev.storage.exceptions.AlreadyFileExistsStorageException;
+import io.github.luidmidev.storage.exceptions.FileNotFoundStorageException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -13,8 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import static io.github.luidmidev.storage.core.StorageUtils.constructStoredFile;
-import static io.github.luidmidev.storage.core.StorageUtils.constructFileInfo;
+import static io.github.luidmidev.storage.StorageUtils.constructFileInfo;
 import static java.lang.System.getProperty;
 
 @Slf4j

@@ -1,11 +1,11 @@
 package io.github.luidmidev.storage.springframework.gridfs;
 
 import com.mongodb.BasicDBObject;
-import io.github.luidmidev.storage.core.PathFile;
-import io.github.luidmidev.storage.core.Stored;
-import io.github.luidmidev.storage.core.Storage;
-import io.github.luidmidev.storage.core.ToStore;
-import io.github.luidmidev.storage.core.exceptions.StorageException;
+import io.github.luidmidev.storage.PathFile;
+import io.github.luidmidev.storage.Stored;
+import io.github.luidmidev.storage.Storage;
+import io.github.luidmidev.storage.ToStore;
+import io.github.luidmidev.storage.exceptions.StorageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static io.github.luidmidev.storage.core.StorageUtils.*;
+import static io.github.luidmidev.storage.StorageUtils.*;
 
 
 /**
