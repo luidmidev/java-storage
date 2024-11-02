@@ -1,7 +1,6 @@
 package io.github.luidmidev.storage.disk;
 
-import io.github.luidmidev.storage.core.Stored;
-import io.github.luidmidev.storage.core.Storage;
+import io.github.luidmidev.storage.core.*;
 import io.github.luidmidev.storage.core.exceptions.AlreadyFileExistsStorageException;
 import io.github.luidmidev.storage.core.exceptions.FileNotFoundStorageException;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import static io.github.luidmidev.storage.core.utils.StorageUtils.constructDownloadedFile;
-import static io.github.luidmidev.storage.core.utils.StorageUtils.constructFileInfo;
+import static io.github.luidmidev.storage.core.StorageUtils.constructStoredFile;
+import static io.github.luidmidev.storage.core.StorageUtils.constructFileInfo;
 import static java.lang.System.getProperty;
 
 @Slf4j
@@ -30,7 +29,6 @@ public class DiskStorage extends Storage {
     }
 
     public DiskStorage(String storagePath) {
-
         this.storagePath = reolveStoragePath(storagePath);
         log.debug("Storage path {}", this.storagePath);
         createDirIfNotExists(this.storagePath);
@@ -50,67 +48,70 @@ public class DiskStorage extends Storage {
     }
 
     @Override
-    protected void internalStore(byte[] content, String filename, String path) throws IOException {
-        log.debug("Storing file {} in path {}", filename, path);
-        var relativePath = path + filename;
+    protected void internalStore(final ToStore toStore) throws IOException {
 
-        var file = new File(storagePath + relativePath);
+        var path = toStore.getPath();
+        var completePath = toStore.getCompletePath();
 
-        createDirIfNotExists(storagePath + path);
-
+        createDirIfNotExists(storagePath + "/" + path);
+        var file = new File(storagePath + "/" + completePath);
         var created = file.createNewFile();
 
-        if (!created) throw new AlreadyFileExistsStorageException(filename, path);
+        if (!created) throw new AlreadyFileExistsStorageException(toStore);
 
         try (var fos = new FileOutputStream(file)) {
-            fos.write(content);
+            fos.write(toStore.getContent());
         }
     }
 
     @Override
-    protected Optional<Stored> internalDownload(String filename, String path) throws IOException {
-        var fullPath = path + filename;
-        var fileOptional = getFile(fullPath);
+    protected Optional<Stored> internalDownload(final PathFile pathFile) throws IOException {
+
+        var completePath = pathFile.getCompletePath();
+        var filename = pathFile.getFilename();
+        var path = pathFile.getPath();
+
+        var fileOptional = getFile(completePath);
         if (fileOptional.isEmpty()) return Optional.empty();
         var file = fileOptional.get();
         var bytes = new byte[(int) file.length()];
         try (var fis = new FileInputStream(file)) {
             var read = fis.read(bytes);
-            if (read != file.length()) throw new IOException("File not read correctly: " + read + " of " + file.length() + " bytes on " + fullPath);
-
-            return Optional.of(constructDownloadedFile(bytes, filename, path));
+            if (read != file.length()) throw new IOException("File not read correctly: " + read + " of " + file.length() + " bytes on " + completePath);
+            return Optional.of(StorageUtils.constructStoredFile(bytes, filename, path));
         }
     }
 
 
     @Override
-    protected Optional<Stored.Info> internalInfo(String filename, String path) throws IOException {
-        var fullPath = path + filename;
-        var pathObject = Paths.get(storagePath + fullPath);
+    protected Optional<Stored.Info> internalInfo(final PathFile pathFile) throws IOException {
+
+        var completePath = pathFile.getCompletePath();
+        var filename = pathFile.getFilename();
+        var path = pathFile.getPath();
+
+        var pathObject = Paths.get(storagePath + "/" + completePath);
         if (!Files.exists(pathObject)) return Optional.empty();
-        return Optional.of(constructFileInfo(filename, Files.size(pathObject), fullPath));
+        return Optional.of(constructFileInfo(filename, Files.size(pathObject), path));
     }
 
     @Override
-    protected boolean internalExists(String filename, String path) {
-        return getFile(path + filename).isPresent();
+    protected boolean internalExists(final PathFile pathFile) {
+        return getFile(pathFile.getCompletePath()).isPresent();
     }
 
     @Override
-    protected void internalRemove(String filename, String path) throws IOException {
-        var fullPath = path + filename;
-        var file = getFile(fullPath);
-        if (file.isEmpty()) throw new FileNotFoundStorageException(filename, path);
+    protected void internalRemove(final PathFile pathFile) throws IOException {
+        var file = getFile(pathFile.getCompletePath());
+        if (file.isEmpty()) throw new FileNotFoundStorageException(pathFile);
 
         Files.delete(file.get().toPath());
-
     }
 
-    private Optional<File> getFile(String fullPath) {
-        var file = new File(storagePath + fullPath);
+    private Optional<File> getFile(String completePath) {
+        var file = new File(storagePath + "/" + completePath);
         return file.exists() ? Optional.of(file) : Optional.empty();
     }
-
 
     private void createDirIfNotExists(String path) {
         var dirs = new File(path);

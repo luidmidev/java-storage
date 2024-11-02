@@ -5,62 +5,56 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
- * Interfaz que define las operaciones básicas de un almacen de archivos.
+ * Clase abstracta que representa un almacen de archivos
  */
 @Slf4j
 public abstract class Storage {
 
 
     /**
-     * @param content  Contenido del archivo
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se almacenará el archivo
+     * @param toStore Objeto que contiene la información del archivo a almacenar
      * @throws IOException Si ocurre un error de lectura o escritura al almacenar el archivo
      */
-    protected abstract void internalStore(byte[] content, String filename, String path) throws IOException;
+    protected abstract void internalStore(final ToStore toStore) throws IOException;
 
     /**
      * Descarga un archivo almacenado a partir de su nombre y ruta
      *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
+     * @param pathFile Objeto que contiene el nombre y ruta del archivo
      * @return Objeto que representa el archivo almacenado
      * @throws IOException Si ocurre un error de lectura o escritura al descargar el archivo
      */
-    protected abstract Optional<Stored> internalDownload(String filename, String path) throws IOException;
+    protected abstract Optional<Stored> internalDownload(final PathFile pathFile) throws IOException;
 
     /**
      * Obtiene la información de un archivo almacenado a partir de su nombre y ruta
      *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
+     * @param pathFile Objeto que contiene el nombre y ruta del archivo
      * @return Objeto que representa la información del archivo almacenado
      * @throws IOException Si ocurre un error de lectura o escritura al obtener la información del archivo
      */
-    protected abstract Optional<Stored.Info> internalInfo(String filename, String path) throws IOException;
+    protected abstract Optional<Stored.Info> internalInfo(final PathFile pathFile) throws IOException;
 
     /**
      * Verifica si un archivo almacenado existe a partir de su nombre y ruta
      *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
+     * @param pathFile Objeto que contiene el nombre y ruta del archivo
      * @return Si el archivo existe o no
      * @throws IOException Si ocurre un error de lectura o escritura al verificar la existencia del archivo
      */
-    protected abstract boolean internalExists(String filename, String path) throws IOException;
+    protected abstract boolean internalExists(final PathFile pathFile) throws IOException;
 
     /**
      * Elimina un archivo almacenado a partir de su nombre y ruta
      *
-     * @param filename Nombre del archivo
-     * @param path     Ruta donde se encuentra el archivo
+     * @param pathFile Objeto que contiene el nombre y ruta del archivo
      * @throws IOException Si ocurre un error de lectura o escritura al eliminar el archivo
      */
-    protected abstract void internalRemove(String filename, String path) throws IOException;
+    protected abstract void internalRemove(final PathFile pathFile) throws IOException;
 
 
     /**
@@ -72,8 +66,8 @@ public abstract class Storage {
      * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
      * @throws InvalidPathStorageException     Si el path es inválido
      */
-    public void store(InputStream content, String filename) throws IOException {
-        store(content, filename, "/");
+    public String store(InputStream content, String filename) throws IOException {
+        return store(content, filename, "");
     }
 
     /**
@@ -85,8 +79,8 @@ public abstract class Storage {
      * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
      * @throws InvalidPathStorageException     Si el path es inválido
      */
-    public void store(byte[] content, String filename) throws IOException {
-        store(content, filename, "/");
+    public String store(byte[] content, String filename) throws IOException {
+        return store(content, filename, "");
     }
 
     /**
@@ -99,9 +93,9 @@ public abstract class Storage {
      * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
      * @throws InvalidPathStorageException     Si el path es inválido
      */
-    public void store(InputStream content, String filename, String path) throws IOException {
+    public String store(InputStream content, String filename, String path) throws IOException {
         var bytes = content.readAllBytes();
-        store(bytes, filename, path);
+        return store(bytes, filename, path);
     }
 
     /**
@@ -110,27 +104,72 @@ public abstract class Storage {
      * @param content  Contenido del archivo
      * @param filename Nombre del archivo
      * @param path     Ruta donde se almacenará el archivo
+     * @return Ruta completa del archivo almacenado
      * @throws IOException                     Si ocurre un error de lectura o escritura al almacenar el archivo
      * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
      * @throws InvalidPathStorageException     Si el path es inválido
      */
-    public void store(byte[] content, String filename, String path) throws IOException {
-
-        log.info("Storing file {} in path {}", filename, path);
-
-        var normalizedPath = normalizePath(path);
-
-        throwIfInvalidFilename(filename);
-        throwIfInvalidPath(normalizedPath);
-
-
-        if (internalExists(filename, normalizedPath)) {
-            throw new AlreadyFileExistsStorageException(filename, normalizedPath);
-        }
-
-        internalStore(content, filename, normalizedPath);
+    public String store(byte[] content, String filename, String path) throws IOException {
+        return store(new ToStore(path, filename, content));
     }
 
+
+    /**
+     * Guarda un archivo en el almacen a partir de un objeto que contiene la información del archivo a almacenar
+     * @param toStore Objeto que contiene la información del archivo a almacenar
+     * @return Ruta completa del archivo almacenado
+     * @throws IOException Si ocurre un error de lectura o escritura al almacenar el archivo
+     */
+    public String store(ToStore toStore) throws IOException {
+        log.debug("Storing file {} in path {}", toStore.getFilename(), toStore.getPath());
+        throwIfAlreadyFileExists(toStore);
+        internalStore(toStore);
+        return toStore.getCompletePath();
+    }
+
+
+    /**
+     * Guarda varios archivos en el almacen de forma segura
+     *
+     * @param toStores Objetos que contienen la información de los archivos a almacenar
+     * @throws IOException Si ocurre un error de lectura o escritura al almacenar los archivos
+     * @throws FileNotFoundStorageException Si no se encuentra alguno de los archivos a almacenar
+     */
+    public void store(ToStore... toStores) throws IOException {
+        var storeds = new ArrayList<ToStore>();
+        try {
+            for (var toStore : toStores) {
+                throwIfAlreadyFileExists(toStore);
+            }
+            for (var toStore : toStores) {
+                internalStore(toStore);
+                storeds.add(toStore);
+                log.debug("Stored file: {}", toStore.getCompletePath());
+            }
+        } catch (Exception e) {
+            for (var stored : storeds) {
+                try {
+                    internalRemove(stored);
+                } catch (Exception e1) {
+                    log.debug("Error purging file: {}", stored.getCompletePath(), e1);
+                }
+            }
+            throw e;
+        }
+    }
+
+
+    /**
+     * Lanza una excepción si el archivo ya existe
+     * @param pathFile Objeto que contiene el nombre y ruta del archivo
+     * @throws IOException Si ocurre un error de lectura o escritura al verificar la existencia del archivo
+     * @throws AlreadyFileExistsStorageException Si el archivo ya existe
+     */
+    private void throwIfAlreadyFileExists(PathFile pathFile) throws IOException, AlreadyFileExistsStorageException {
+        if (internalExists(pathFile)) {
+            throw new AlreadyFileExistsStorageException(pathFile);
+        }
+    }
 
     /**
      * Descarga un archivo almacenado a partir de su ruta completa
@@ -151,8 +190,7 @@ public abstract class Storage {
      * @throws IOException Si ocurre un error de lectura o escritura al descargar el archivo
      */
     public Optional<Stored> download(String filename, String path) throws IOException {
-        var normalizedPath = normalizePath(path);
-        return internalDownload(filename, normalizedPath);
+        return internalDownload(new PathFile(path, filename));
     }
 
 
@@ -177,8 +215,7 @@ public abstract class Storage {
      * @throws IOException Si ocurre un error de lectura o escritura al obtener la información del archivo
      */
     public Optional<Stored.Info> info(String filename, String path) throws IOException {
-        var normalizedPath = normalizePath(path);
-        return internalInfo(filename, normalizedPath);
+        return internalInfo(new PathFile(path, filename));
     }
 
     /**
@@ -202,8 +239,8 @@ public abstract class Storage {
      * @throws IOException Si ocurre un error de lectura o escritura al verificar la existencia del archivo
      */
     public boolean exists(String filename, String path) throws IOException {
-        var normalizedPath = normalizePath(path);
-        return internalExists(filename, normalizedPath);
+        var normalizedPath = StorageUtils.normalizePath(path);
+        return internalExists(new PathFile(normalizedPath, filename));
     }
 
     /**
@@ -225,8 +262,7 @@ public abstract class Storage {
      * @throws IOException Si ocurre un error de lectura o escritura al eliminar el archivo
      */
     public void remove(String filename, String path) throws IOException {
-        var normalizedPath = normalizePath(path);
-        internalRemove(filename, normalizedPath);
+        internalRemove(new PathFile(path, filename));
     }
 
 
@@ -236,6 +272,7 @@ public abstract class Storage {
      *
      * @param purgable Objeto que contiene las referencias a los archivos a eliminar
      * @throws IOException Si ocurre un error de lectura o escritura al eliminar los archivos almacenados a partir del objeto purgable
+     * @throws FileNotFoundStorageException Si no se encuentra el archivo a eliminar
      */
     public void purge(PurgableStored purgable) throws IOException {
         for (var fullPath : purgable.filesFullPaths()) remove(fullPath);
@@ -246,13 +283,13 @@ public abstract class Storage {
      *
      * @param purgables Objetos que contienen las referencias a los archivos a eliminar
      * @throws IOException Si ocurre un error de lectura o escritura al eliminar los archivos almacenados a partir de los objetos purgables
+     * @throws FileNotFoundStorageException Si no se encuentra alguno de los archivos a eliminar
      */
     public void purge(Iterable<? extends PurgableStored> purgables) throws IOException {
-        for (PurgableStored purgable : purgables) {
+        for (var purgable : purgables) {
             purge(purgable);
         }
     }
-
 
     /**
      * Transfiere un archivo almacenado a otro almacen
@@ -263,10 +300,10 @@ public abstract class Storage {
      * @throws IOException Si ocurre un error de lectura o escritura al transferir el archivo
      */
     public void transferTo(Storage target, String filename, String path) throws IOException {
-        var normalizedPath = normalizePath(path);
-        var downloadedFile = internalDownload(normalizedPath, path);
+        var pathFile = new PathFile(path, filename);
+        var downloadedFile = internalDownload(pathFile);
         if (downloadedFile.isEmpty()) {
-            throw new FileNotFoundStorageException(normalizedPath, filename);
+            throw new FileNotFoundStorageException(pathFile);
         }
         target.store(downloadedFile.get().getContent(), filename, path);
     }
@@ -283,111 +320,8 @@ public abstract class Storage {
         transferTo(target, split.filename(), split.path());
     }
 
-    private static final Pattern INVALID_FILENAME_CHARACTERS = Pattern.compile("[\\\\/:*?\"<>|]");
-    private static final int MAX_FILENAME_LENGTH = 255;
-
-    /**
-     * Lanza una excepción si el nombre del archivo es inválido
-     *
-     * @param filename Nombre del archivo a validar
-     * @throws InvalidFileNameStorageException Si el nombre del archivo es inválido
-     */
-    private static void throwIfInvalidFilename(String filename) throws InvalidFileNameStorageException {
-
-        if (filename == null || filename.isEmpty()) {
-            throw new InvalidFileNameStorageException(filename, "The filename is required.");
-        }
-
-        if (filename.length() > MAX_FILENAME_LENGTH) {
-            throw new InvalidFileNameStorageException(filename, "The filename is too long, it must be less than " + MAX_FILENAME_LENGTH + " characters.");
-        }
-
-        var invalidCharacters = new StringBuilder();
-        for (char c : filename.toCharArray()) {
-            var charact = String.valueOf(c);
-            if (INVALID_FILENAME_CHARACTERS.matcher(charact).find() && invalidCharacters.indexOf(charact) == -1) {
-                invalidCharacters.append(c).append(" ");
-            }
-        }
-
-        if (!invalidCharacters.isEmpty()) {
-            throw new InvalidFileNameStorageException(filename, "The filename contains invalid characters: " + invalidCharacters.toString().trim());
-        }
-    }
-
-
-    private static final Pattern INVALID_PATH_CHARACTERS = Pattern.compile("[<>:\"|?*\\\\]");
-
-    /**
-     * Lanza una excepción si el path es inválido
-     *
-     * @param path Path a validar
-     * @throws StorageException Si el path es inválido
-     */
-    private static void throwIfInvalidPath(String path) throws InvalidPathStorageException {
-        if (path == null || path.isEmpty()) {
-            throw new InvalidPathStorageException(path, "The path is required.");
-        }
-
-        if (path.equals("/")) return;
-
-        var invalidCharacters = new StringBuilder();
-        for (char c : path.toCharArray()) {
-            var charact = String.valueOf(c);
-            if (INVALID_PATH_CHARACTERS.matcher(charact).find() && invalidCharacters.indexOf(charact) == -1) {
-                invalidCharacters.append(c).append(" ");
-            }
-
-        }
-
-        if (!invalidCharacters.isEmpty()) {
-            throw new InvalidPathStorageException(path, "The path contains invalid characters: " + invalidCharacters.toString().trim());
-        }
-
-        validateInPathSegments(path);
-    }
-
-    private static void validateInPathSegments(String path) {
-        var segments = path.startsWith("/") ? path.substring(1).split("/") : path.split("/");
-
-        for (var segment : segments) {
-
-            if (segment.isEmpty()) {
-                throw new InvalidPathStorageException(path, "The path cannot contain empty segments.");
-            }
-
-            if (segment.startsWith(" ")) {
-                throw new InvalidPathStorageException(path, "The path cannot contain segments starting with spaces.");
-            }
-
-            if (segment.endsWith(" ")) {
-                throw new InvalidPathStorageException(path, "The path cannot contain segments ending with spaces.");
-            }
-
-            if (segment.endsWith(".")) {
-                throw new InvalidPathStorageException(path, "The path cannot contain segments ending with a dot.");
-            }
-
-            if (segment.chars().allMatch(c -> c == '.')) {
-                throw new InvalidPathStorageException(path, "The path cannot contain segments with only dots.");
-            }
-        }
-    }
-
-    /**
-     * Obtiene la ruta ideal de un path para almacenar un archivo
-     *
-     * @param path Path a normalizar
-     * @return Path normalizado
-     */
-    protected static String normalizePath(String path) {
-        if (path == null || path.isBlank()) return "/";
-        if (path.equals("/")) return path;
-        var normalizedPath = path.startsWith("/") ? path : "/" + path;
-        return normalizedPath.endsWith("/") ? normalizedPath : normalizedPath + "/";
-    }
-
     protected record SplitPath(String path, String filename) {
+
         public static SplitPath from(String fullPath) {
             var split = new SplitPath(extractPath(fullPath), extractFilename(fullPath));
             log.debug("Split path: {}", split);

@@ -5,13 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0203323b-92e9-42a1-b6fb-199f02b264df" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/PathFile.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/StorageAssertions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/StorageUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/ToStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/Storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/Storage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/AlreadyFileExistsStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/AlreadyFileExistsStorageException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/FileNotFoundStorageException.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/exceptions/FileNotFoundStorageException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/core/utils/StorageUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-disk/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-disk/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-disk/src/main/java/io/github/luidmidev/storage/disk/DiskStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-disk/src/main/java/io/github/luidmidev/storage/disk/DiskStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-google-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-google-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-google-cloud/src/main/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-google-cloud/src/main/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-google-cloud/src/test/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorageTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-google-cloud/src/test/java/io/github/luidmidev/storage/google/cloud/GoogleCloudStorageTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-spring-data-jpa/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-data-jpa/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-spring-data-jpa/src/main/java/io/github/luidmidev/storage/springframework/data/jpa/JpaStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-data-jpa/src/main/java/io/github/luidmidev/storage/springframework/data/jpa/JpaStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-spring-gridfs/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-gridfs/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage-spring-gridfs/src/main/java/io/github/luidmidev/storage/springframework/gridfs/GridFSStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-spring-gridfs/src/main/java/io/github/luidmidev/storage/springframework/gridfs/GridFSStorage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -33,6 +59,7 @@
   "keyToString": {
     "JUnit.GoogleCloudStorageTest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/dev/artifacts/maven/storage/storage-google-cloud/src/main/resources/firebase",
@@ -42,8 +69,8 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
@@ -54,6 +81,9 @@
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\dev\artifacts\maven\storage\storage-google-cloud\src\test\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.github.luidmidev.storage.core.exceptions" />
     </key>
   </component>
   <component name="RunManager">
@@ -98,7 +128,7 @@
       <workItem from="1730557990607" duration="606000" />
       <workItem from="1730558776373" duration="1566000" />
       <workItem from="1730560402281" duration="980000" />
-      <workItem from="1730561435165" duration="1399000" />
+      <workItem from="1730561435165" duration="15949000" />
     </task>
     <servers />
   </component>

@@ -15,16 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class GoogleCloudStorageTest {
 
-
-    private static GoogleCloudStorage googleCloudStorage;
+    private static GoogleCloudStorage storage;
 
     @BeforeAll
     static void setUp() throws IOException {
         try (var resourceCredentials = getResource("firebase/serviceAccountKey.json")) {
-
-            if (resourceCredentials == null) {
-                throw new IllegalArgumentException("Resource not found");
-            }
 
             var storage = StorageOptions.newBuilder()
                     .setCredentials(GoogleCredentials.fromStream(resourceCredentials))
@@ -32,7 +27,7 @@ class GoogleCloudStorageTest {
                     .getService();
 
             var bucket = storage.get("umwmec.appspot.com");
-            googleCloudStorage = new GoogleCloudStorage(bucket);
+            GoogleCloudStorageTest.storage = new GoogleCloudStorage(bucket);
 
         }
     }
@@ -41,17 +36,16 @@ class GoogleCloudStorageTest {
     void store() {
         log.info("Storing file");
         try (var resource = getResource("test-file.webp")) {
-            if (resource == null) {
-                throw new IllegalArgumentException("Resource not found");
-            }
-            googleCloudStorage.store(resource, "test.txt");
 
-            assertTrue(true);
+            var fullpath = storage.store(resource, "test.txt");
+
+            System.out.printf("Stored file with fullpath: %s%n", fullpath);
+            assertNotNull(fullpath);
+
         } catch (IOException e) {
             log.error("Error storing file {}", e.getMessage());
             fail(e);
         }
-
     }
 
     @Test
@@ -59,13 +53,12 @@ class GoogleCloudStorageTest {
 
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
-            if (resource == null) {
-                throw new IllegalArgumentException("Resource not found");
-            }
 
-            googleCloudStorage.store(resource, fileName, "test/");
+            var fullpath = storage.store(resource, fileName, "test_dir/");
 
-            assertTrue(true);
+            System.out.printf("Stored file with fullpath: %s%n", fullpath);
+            assertNotNull(fullpath);
+
         } catch (IOException e) {
             fail(e);
         }
@@ -77,13 +70,10 @@ class GoogleCloudStorageTest {
 
         var fileName = "to-download.webp";
         try (var resource = getResource(fileName)) {
-            if (resource == null) {
-                throw new IllegalArgumentException("Resource not found");
-            }
 
-            googleCloudStorage.store(resource, fileName);
+            var fullpath = storage.store(resource, fileName);
+            var downloaded = storage.download(fullpath);
 
-            var downloaded = googleCloudStorage.download(fileName);
             assertTrue(downloaded.isPresent());
 
             var fileInfo = downloaded.get().getInfo();
@@ -104,13 +94,10 @@ class GoogleCloudStorageTest {
 
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
-            if (resource == null) {
-                throw new IllegalArgumentException("Resource not found");
-            }
 
-            googleCloudStorage.store(resource, "to-info" + fileName);
+            var fullPath = storage.store(resource, "to-info" + fileName);
+            var info = storage.info(fullPath);
 
-            var info = googleCloudStorage.info("to-info" + fileName);
             assertTrue(info.isPresent());
 
             log.info("File info {}", info.get());
@@ -126,13 +113,11 @@ class GoogleCloudStorageTest {
 
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
-            if (resource == null) {
-                throw new IllegalArgumentException("Resource not found");
-            }
 
-            googleCloudStorage.store(resource, "to-exists" + fileName);
+            var fullPath = storage.store(resource, "to-exists" + fileName);
 
-            assertTrue(googleCloudStorage.exists("to-exists" + fileName));
+            assertTrue(storage.exists(fullPath));
+
         } catch (IOException e) {
             fail(e);
         }
@@ -143,20 +128,21 @@ class GoogleCloudStorageTest {
 
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
-            if (resource == null) {
-                throw new IllegalArgumentException("Resource not found");
-            }
-            googleCloudStorage.store(resource, "to-remove" + fileName);
 
-            googleCloudStorage.remove("to-remove" + fileName);
+            var fullPath = storage.store(resource, "to-remove" + fileName);
+            storage.remove(fullPath);
 
-            assertFalse(googleCloudStorage.exists("to-remove" + fileName));
+            assertFalse(storage.exists("to-remove" + fileName));
         } catch (IOException e) {
             fail(e);
         }
     }
 
     private static InputStream getResource(String resource) {
-        return GoogleCloudStorageTest.class.getClassLoader().getResourceAsStream(resource);
+        var stream = GoogleCloudStorageTest.class.getClassLoader().getResourceAsStream(resource);
+        if (stream == null) {
+            throw new IllegalArgumentException("Resource not found");
+        }
+        return stream;
     }
 }
