@@ -5,24 +5,25 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>storage-google-cloud</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 
     <parent>
         <groupId>io.github.luidmidev</groupId>
         <artifactId>storage</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <com.google.cloud.version>2.44.1</com.google.cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
 
         <dependency>
-            <groupId>io.github.luidmidev</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>storage-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -33,9 +34,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>9.3.0</version>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-storage</artifactId>
+            <version>${com.google.cloud.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-storage-control</artifactId>
+            <version>${com.google.cloud.version}</version>
         </dependency>
     </dependencies>
 

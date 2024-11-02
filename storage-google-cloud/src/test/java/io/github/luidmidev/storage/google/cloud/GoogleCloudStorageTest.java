@@ -1,9 +1,7 @@
 package io.github.luidmidev.storage.google.cloud;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.cloud.StorageClient;
+import com.google.cloud.storage.StorageOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,17 +23,15 @@ class GoogleCloudStorageTest {
         try (var resourceCredentials = getResource("firebase/serviceAccountKey.json")) {
 
             if (resourceCredentials == null) {
-                throw new IllegalArgumentException("File not found");
+                throw new IllegalArgumentException("Resource not found");
             }
 
-            var credentials = GoogleCredentials.fromStream(resourceCredentials);
+            var storage = StorageOptions.newBuilder()
+                    .setCredentials(GoogleCredentials.fromStream(resourceCredentials))
+                    .build()
+                    .getService();
 
-            var options = FirebaseOptions.builder()
-                    .setCredentials(credentials)
-                    .build();
-            FirebaseApp.initializeApp(options);
-
-            var bucket = StorageClient.getInstance().bucket("umwmec.appspot.com");
+            var bucket = storage.get("umwmec.appspot.com");
             googleCloudStorage = new GoogleCloudStorage(bucket);
 
         }
@@ -46,7 +42,7 @@ class GoogleCloudStorageTest {
         log.info("Storing file");
         try (var resource = getResource("test-file.webp")) {
             if (resource == null) {
-                throw new IllegalArgumentException("File not found");
+                throw new IllegalArgumentException("Resource not found");
             }
             googleCloudStorage.store(resource, "test.txt");
 
@@ -64,7 +60,7 @@ class GoogleCloudStorageTest {
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
             if (resource == null) {
-                throw new IllegalArgumentException("File not found");
+                throw new IllegalArgumentException("Resource not found");
             }
 
             googleCloudStorage.store(resource, fileName, "test/");
@@ -82,7 +78,7 @@ class GoogleCloudStorageTest {
         var fileName = "to-download.webp";
         try (var resource = getResource(fileName)) {
             if (resource == null) {
-                throw new IllegalArgumentException("File not found");
+                throw new IllegalArgumentException("Resource not found");
             }
 
             googleCloudStorage.store(resource, fileName);
@@ -109,7 +105,7 @@ class GoogleCloudStorageTest {
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
             if (resource == null) {
-                throw new IllegalArgumentException("File not found");
+                throw new IllegalArgumentException("Resource not found");
             }
 
             googleCloudStorage.store(resource, "to-info" + fileName);
@@ -131,7 +127,7 @@ class GoogleCloudStorageTest {
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
             if (resource == null) {
-                throw new IllegalArgumentException("File not found");
+                throw new IllegalArgumentException("Resource not found");
             }
 
             googleCloudStorage.store(resource, "to-exists" + fileName);
@@ -148,7 +144,7 @@ class GoogleCloudStorageTest {
         var fileName = "test-file.webp";
         try (var resource = getResource(fileName)) {
             if (resource == null) {
-                throw new IllegalArgumentException("File not found");
+                throw new IllegalArgumentException("Resource not found");
             }
             googleCloudStorage.store(resource, "to-remove" + fileName);
 
