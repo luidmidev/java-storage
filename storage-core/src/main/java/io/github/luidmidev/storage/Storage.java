@@ -4,6 +4,7 @@ import io.github.luidmidev.storage.exceptions.AlreadyFileExistsStorageException;
 import io.github.luidmidev.storage.exceptions.FileNotFoundStorageException;
 import io.github.luidmidev.storage.exceptions.InvalidFileNameStorageException;
 import io.github.luidmidev.storage.exceptions.InvalidPathStorageException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -14,8 +15,13 @@ import java.util.Optional;
 /**
  * Clase abstracta que representa un almacen de archivos
  */
+@Getter
 @Slf4j
 public abstract class Storage {
+
+    private final StoreTracking traking = new StoreTracking();
+
+
     /**
      * @param toStore Objeto que contiene la información del archivo a almacenar
      * @throws IOException Si ocurre un error de lectura o escritura al almacenar el archivo
@@ -126,7 +132,7 @@ public abstract class Storage {
         throwIfAlreadyFileExists(toStore);
         internalStore(toStore);
         var completedPath = toStore.getCompletePath();
-        StoreTrackingContext.track(completedPath);
+        traking.track(completedPath);
         return completedPath;
     }
 
@@ -159,8 +165,7 @@ public abstract class Storage {
             }
             throw e;
         }
-        StoreTrackingContext.track(storeds.stream().map(PathFile::getCompletePath).toList());
-
+        traking.track(storeds.stream().map(PathFile::getCompletePath).toList());
     }
 
 
@@ -325,7 +330,7 @@ public abstract class Storage {
         transferTo(target, split.filename(), split.path());
     }
 
-    protected record SplitPath(String path, String filename) {
+    record SplitPath(String path, String filename) {
 
         public static SplitPath from(String fullPath) {
             var split = new SplitPath(extractPath(fullPath), extractFilename(fullPath));
