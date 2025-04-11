@@ -21,7 +21,7 @@ class GoogleCloudStorageTest {
     static void setUp() throws IOException {
         try (var resourceCredentials = getResource("firebase/serviceAccountKey.json")) {
 
-            var storage = StorageOptions.newBuilder()
+            var storage = StorageOptions.http()
                     .setCredentials(GoogleCredentials.fromStream(resourceCredentials))
                     .build()
                     .getService();

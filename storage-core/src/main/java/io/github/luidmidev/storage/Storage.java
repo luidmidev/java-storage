@@ -16,8 +16,6 @@ import java.util.Optional;
  */
 @Slf4j
 public abstract class Storage {
-
-
     /**
      * @param toStore Objeto que contiene la información del archivo a almacenar
      * @throws IOException Si ocurre un error de lectura o escritura al almacenar el archivo
@@ -127,7 +125,9 @@ public abstract class Storage {
         log.debug("Storing file {} in path {}", toStore.getFilename(), toStore.getPath());
         throwIfAlreadyFileExists(toStore);
         internalStore(toStore);
-        return toStore.getCompletePath();
+        var completedPath = toStore.getCompletePath();
+        StoreTrackingContext.track(completedPath);
+        return completedPath;
     }
 
 
@@ -159,6 +159,8 @@ public abstract class Storage {
             }
             throw e;
         }
+        StoreTrackingContext.track(storeds.stream().map(PathFile::getCompletePath).toList());
+
     }
 
 
