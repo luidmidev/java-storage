@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0203323b-92e9-42a1-b6fb-199f02b264df" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/StorageBatchState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/Storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/Storage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/StoreTrackingContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/StoreTrackingContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/StoreTracking.java" beforeDir="false" afterPath="$PROJECT_DIR$/storage-core/src/main/java/io/github/luidmidev/storage/StoreTracking.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,6 +133,8 @@
       <workItem from="1740847029262" duration="410000" />
       <workItem from="1744403762397" duration="1611000" />
       <workItem from="1744405807047" duration="462000" />
+      <workItem from="1744406276196" duration="389000" />
+      <workItem from="1746471348951" duration="2230000" />
     </task>
     <servers />
   </component>

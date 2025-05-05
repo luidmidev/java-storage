@@ -10,14 +10,9 @@ public final class StoreTracking {
 
     private final ThreadLocal<List<String>> storedThreadLocal = new ThreadLocal<>();
 
-     StoreTracking() {
-    }
-
-
-
     public void start() {
         storedThreadLocal.set(new ArrayList<>());
-        log.debug("Started store tracking for current thread.");
+        log.debug("Started store tracking.");
     }
 
     void track(String paths) {

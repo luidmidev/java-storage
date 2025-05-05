@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>storage-google-cloud</artifactId>
-    <version>0.0.61</version>
+    <version>0.0.62</version>
 
     <parent>
         <groupId>io.github.luidmidev</groupId>
         <artifactId>storage</artifactId>
-        <version>0.0.61</version>
+        <version>0.0.62</version>
     </parent>
 
     <properties>

@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Clase abstracta que representa un almacen de archivos
@@ -20,6 +22,41 @@ import java.util.Optional;
 public abstract class Storage {
 
     private final StoreTracking traking = new StoreTracking();
+
+    private static final ThreadLocal<StorageBatchState> CONTEXT_BATCH_STATE = new ThreadLocal<>();
+
+    @FunctionalInterface
+    public interface StorageBatchOperation {
+        void excute(StorageBatchState state) throws IOException;
+    }
+
+    public static StorageBatchState getContextBatchState() {
+        var executionContext = CONTEXT_BATCH_STATE.get();
+        if (executionContext == null) {
+            throw new IllegalStateException("No execution context found");
+        }
+        return executionContext;
+    }
+
+    public void batchExecution(StorageBatchOperation context) throws IOException {
+        var state = new StorageBatchState();
+        CONTEXT_BATCH_STATE.set(state);
+        try {
+            context.excute(state);
+            store(state.toStores());
+            CompletableFuture.runAsync(() -> {
+                for (var fullPath : state.toRemove()) {
+                    try {
+                        remove(fullPath);
+                    } catch (IOException e) {
+                        log.error("Error removing file: {}", fullPath, e);
+                    }
+                }
+            });
+        } finally {
+            CONTEXT_BATCH_STATE.remove();
+        }
+    }
 
 
     /**
@@ -166,6 +203,17 @@ public abstract class Storage {
             throw e;
         }
         traking.track(storeds.stream().map(PathFile::getCompletePath).toList());
+    }
+
+    /**
+     * Guarda varios archivos en el almacen de forma segura
+     *
+     * @param toStores Objetos que contienen la información de los archivos a almacenar
+     * @throws IOException Si ocurre un error de lectura o escritura al almacenar los archivos
+     * @throws FileNotFoundStorageException Si no se encuentra alguno de los archivos a almacenar
+     */
+    public void store(Collection<ToStore> toStores) throws IOException {
+        this.store(toStores.toArray(ToStore[]::new));
     }
 
 
